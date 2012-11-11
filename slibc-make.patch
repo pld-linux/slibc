@@ -1,0 +1,47 @@
+--- slibc-0.9.2/Makefile.orig	2012-10-31 13:47:17.000000000 +0100
++++ slibc-0.9.2/Makefile	2012-11-10 22:13:43.459314816 +0100
+@@ -13,14 +13,14 @@
+ 	cd ./gen/ && tar czf $(ARCHIVE_NAME).tar.gz $(ARCHIVE_NAME)/
+ 	rm -rf ./gen/$(ARCHIVE_NAME)
+ 
+-install_devel: test
++install_devel:
+ 	mkdir -p $(DESTDIR)$(libdir)/
+ 	cp src/$(SLIBC_LIB) $(DESTDIR)$(libdir)/$(SLIBC_LIB)
+ 	cp src/$(SLIBC_LIB_CPP) $(DESTDIR)$(libdir)/$(SLIBC_LIB_CPP)
+ 	mkdir -p $(DESTDIR)/usr/include/slibc/
+ 	cp -r include/slibc/* $(DESTDIR)/usr/include/slibc/
+ 
+-install: test
++install:
+ 	mkdir -p $(DESTDIR)$(libdir)/
+ 	cp src/$(SLIBC_LIB_SH) $(DESTDIR)$(libdir)/$(SLIBC_LIB_SH)
+ 	cp src/$(SLIBC_LIB_CPP_SH) $(DESTDIR)$(libdir)/$(SLIBC_LIB_CPP_SH)	
+--- slibc-0.9.2/src/Makefile.orig	2012-10-31 13:29:06.000000000 +0100
++++ slibc-0.9.2/src/Makefile	2012-11-11 12:53:08.580433809 +0100
+@@ -17,20 +17,20 @@
+ 	gnu_qsort_s_cpp.o gnu_bsearch_s_cpp.o gnu_strtok_s_cpp.o gnu_vfscanf_s_cpp.o 
+ 
+ # static libraries
+-# $(SLIBC_LIB): $(SLIBC_OBJS)
+-# 	ar rcs $(SLIBC_LIB) $(SLIBC_OBJS)
++$(SLIBC_LIB): $(SLIBC_OBJS)
++	ar rcs $(SLIBC_LIB) $(SLIBC_OBJS)
+ 
+-# $(SLIBC_LIB_CPP): $(SLIBC_OBJS_CPP)
+-# 	ar rcs $(SLIBC_LIB_CPP) $(SLIBC_OBJS_CPP)
++$(SLIBC_LIB_CPP): $(SLIBC_OBJS_CPP)
++	ar rcs $(SLIBC_LIB_CPP) $(SLIBC_OBJS_CPP)
+ 
+ $(SLIBC_LIB_SO): $(SLIBC_OBJS)
+-	$(CC) -shared -shared -Wl,-soname,$(SLIBC_LIB_SONAME) -o $(SLIBC_LIB_SO) $(SLIBC_OBJS)
++	$(CC) -shared -Wl,-soname,$(SLIBC_LIB_SONAME) -o $(SLIBC_LIB_SO) $(SLIBC_OBJS) -pthread
+ 	ln -s -f $(SLIBC_LIB_SO) $(SLIBC_LIB_SONAME)
+ 	ln -s -f $(SLIBC_LIB_SONAME) lib$(SLIBC_NAME).so
+ 
+ $(SLIBC_LIB_CPP_SO): $(SLIBC_OBJS_CPP)
+-	$(CXX) -shared -shared -Wl,-soname,$(SLIBC_LIB_CPP_SONAME) -o $(SLIBC_LIB_CPP_SO) $(SLIBC_OBJS_CPP)
++	$(CXX) -shared -shared -Wl,-soname,$(SLIBC_LIB_CPP_SONAME) -o $(SLIBC_LIB_CPP_SO) $(SLIBC_OBJS_CPP) -pthread
+ 	ln -s -f $(SLIBC_LIB_CPP_SO) $(SLIBC_LIB_CPP_SONAME)
+ 	ln -s -f $(SLIBC_LIB_CPP_SONAME) lib$(SLIBC_NAME_CPP).so
+ 
